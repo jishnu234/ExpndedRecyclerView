@@ -1,17 +1,22 @@
 package com.example.expndedrecyclerview;
 
+import android.view.View;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.BindingAdapter;
+
 public class Movie {
 
    private String movieName;
    private String year;
-   private String rating;
+   private float rating;
    private String plot;
    private boolean expanded;
 
-    public Movie(String movieName, String year, String rating, String plot) {
+    public Movie(String movieName, String year, float rating, String plot) {
         this.movieName = movieName;
         this.year = year;
-        this.rating = rating;
+        this.rating = 5*(rating/10);
         this.plot = plot;
         this.expanded = false;
     }
@@ -40,11 +45,11 @@ public class Movie {
         this.year = year;
     }
 
-    public String getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -55,4 +60,5 @@ public class Movie {
     public void setPlot(String plot) {
         this.plot = plot;
     }
+
 }

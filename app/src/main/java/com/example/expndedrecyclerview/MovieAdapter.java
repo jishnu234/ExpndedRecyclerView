@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.expndedrecyclerview.databinding.MovieLayoutBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     Context context;
     ArrayList<Movie> movieList;
+
     public MovieAdapter(Context context, ArrayList<Movie> movieList) {
         this.context =context;
         this.movieList = movieList;
@@ -27,23 +30,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.movie_layout, parent, false);
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        MovieLayoutBinding binding = MovieLayoutBinding.inflate(inflater, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.titleText.setText(movieList.get(position).getMovieName());
-        holder.yearText.setText(movieList.get(position).getYear());
-        holder.plotText.setText(movieList.get(position).getPlot());
-
-        float rating = Float.parseFloat(movieList.get(position).getRating());
-        float actualRating = 5*(rating/10);
-        holder.ratingText.setRating(actualRating);
-
+        holder.binding.setMovie(movieList.get(position));
         boolean expanded = movieList.get(position).isExpanded();
-        holder.contentLayout.setVisibility(expanded? View.VISIBLE: View.GONE);
+        holder.binding.contenLayout.setVisibility(expanded? View.VISIBLE: View.GONE);
 
     }
 
@@ -53,29 +50,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        MovieLayoutBinding binding;
+        public ViewHolder(@NonNull MovieLayoutBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
 
-        TextView titleText, yearText, plotText;
-        RatingBar ratingText;
-        ConstraintLayout contentLayout;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+            binding.parentLayout.setOnClickListener(view -> {
 
-            titleText = itemView.findViewById(R.id.titleText);
-            yearText = itemView.findViewById(R.id.yearValue);
-            ratingText = itemView.findViewById(R.id.ratingValue);
-            plotText = itemView.findViewById(R.id.textPlot);
-            contentLayout = itemView.findViewById(R.id.contenLayout);
+                Movie movie = movieList.get(getAdapterPosition());
+                movie.setExpanded(!movie.isExpanded());
+                notifyItemChanged(getAdapterPosition());
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Movie movie = movieList.get(getAdapterPosition());
-                    movie.setExpanded(!movie.isExpanded());
-                    notifyItemChanged(getAdapterPosition());
-
-                }
             });
+
+
         }
     }
 }
